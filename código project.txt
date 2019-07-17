@@ -1,0 +1,74 @@
+Public Sub CopiarMacros()
+' Copia as informações necessárias para elaboração do sumário executivo para uma planilha
+
+Dim t As Task
+Dim Data_Status
+Dim empresa_cod As Long
+Dim valor As Long
+Dim num_proj As Integer
+Dim campo As Long
+
+Dim xlApp As Excel.Application
+Dim xlBook As Excel.Workbook
+Dim xlSheet As Excel.Worksheet
+Dim proj As Project
+Dim Asgn As Assignment
+
+Application.ScreenUpdating = False
+Application.DisplayAlerts = False
+
+Excel.Application.ScreenUpdating = False
+Excel.Application.DisplayAlerts = False
+Set xlApp = Excel.Application
+xlApp.Workbooks.Open "I:\ASGP\_Publica\Processos\PMO\1 - Projetos\2019\Acompanhamento dos Projetos\04  Portfolio de Projetos\Projetos\Base Acompanhamento\VBA\Origem.xlsx", ReadOnly:=True
+xlApp.Workbooks.Open "I:\ASGP\_Publica\Processos\PMO\1 - Projetos\2019\Acompanhamento dos Projetos\04  Portfolio de Projetos\Projetos\Base Acompanhamento\VBA\Destino.xlsx", ReadOnly:=False
+
+num_proj = xlApp.Workbooks("Origem").Worksheets("lista").Cells(Rows.count, 1).End(xlUp).Row
+  
+For i = 1 To num_proj
+    a = xlApp.Workbooks("Origem").Worksheets("lista").Cells(i + 1, 1)
+    FileOpenEx Name:="<>\" & a, ReadOnly:=True
+    Set proj = ActiveProject
+    On Error Resume Next
+    
+    campo = FieldNameToFieldConstant("% AV FIS PP DEGRAU ©", pjProject)
+    valor = ActiveProject.ProjectSummaryTask.GetField(campo)
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 4) = valor
+    
+    campo = FieldNameToFieldConstant("% ENTREGA META ©", pjProject)
+    valor = ActiveProject.ProjectSummaryTask.GetField(campo)
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 5) = valor
+    
+    campo = FieldNameToFieldConstant("STATUS DO IP", pjProject)
+    valor = ActiveProject.ProjectSummaryTask.GetField(campo)
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 7) = valor
+    
+    campo = FieldNameToFieldConstant("CUSTO ATUAL ©", pjProject)
+    valor = ActiveProject.ProjectSummaryTask.GetField(campo)
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 18) = valor
+    
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 8) = proj.StatusDate
+    'xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 9) = proj.BaselineStart
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 10) = proj.BaselineFinish
+    'xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 11) = proj.ProjectStart
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 12) = proj.ProjectFinish
+    'xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 13) = proj.BaselineDuration
+    'xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 14) = proj.Duration
+    xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 17) = proj.BaselineCost
+    'xlApp.Workbooks("Destino").Worksheets("registro").Cells(i + 1, 18) = proj.Cost
+    
+    FileClose pjDoNotSave
+    Application.CutCopyMode = False
+Next i
+
+xlApp.Workbooks("Origem").Close
+xlApp.Workbooks("Destino").Close SaveChanges:=True
+endtime = Timer
+
+Application.DisplayAlerts = True
+Application.ScreenUpdating = True
+Excel.Application.ScreenUpdating = True
+Excel.Application.DisplayAlerts = True
+
+End Sub
+

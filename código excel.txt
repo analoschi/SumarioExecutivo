@@ -1,0 +1,30 @@
+Public Sub BuscarDados()
+
+Dim i, j, num_proj As Integer
+Dim ws As Worksheet
+Dim wb As Workbook
+Dim aba As String
+
+Workbooks.Open "I:\ASGP\_Publica\Processos\PMO\1 - Projetos\2019\Acompanhamento dos Projetos\04  Portfolio de Projetos\Projetos\Base Acompanhamento\VBA\Origem.xlsx", ReadOnly:=True
+Workbooks.Open "I:\ASGP\_Publica\Processos\PMO\1 - Projetos\2019\Acompanhamento dos Projetos\04  Portfolio de Projetos\Projetos\Base Acompanhamento\VBA\Destino.xlsx", ReadOnly:=False
+
+num_proj = Workbooks("Origem").Worksheets("lista").Cells(Rows.Count, 1).End(xlUp).Row
+
+For i = 2 To (num_proj)
+
+    aba = Workbooks("Origem").Worksheets("lista").Cells(i, 2)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 6) = Workbooks("Destino").Worksheets("registro").Cells(i, 4)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 7) = Workbooks("Destino").Worksheets("registro").Cells(i, 5)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 9) = Workbooks("Destino").Worksheets("registro").Cells(i, 7)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 10) = Workbooks("Destino").Worksheets("registro").Cells(i, 8)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 12) = Workbooks("Destino").Worksheets("registro").Cells(i, 10)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 14) = Workbooks("Destino").Worksheets("registro").Cells(i, 12)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 19) = Workbooks("Destino").Worksheets("registro").Cells(i, 17)
+    Workbooks("Acompanhamento de Projetos").Worksheets(aba).Cells(2, 20) = Workbooks("Destino").Worksheets("registro").Cells(i, 18)
+    
+Next i
+
+Workbooks("Origem").Close
+Workbooks("Destino").Close
+
+End Sub
